@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { TextStyle } from 'react-native';
 import { Animated, Text } from 'react-native';
 import {
@@ -61,33 +61,48 @@ type TypeAnimationProps = {
   /**
    * An array of objects defining the text to be typed and animation options.
    */
-  sequence: Array<{
-    /**
-     * A function to execute as part of the sequence. Can be used as a callback to perform actions.
-     */
-    action?: () => void;
-    /**
-     * The text to display or type in the sequence.
-     */
-    text?: string;
-    /**
-     * The delay between the current sequence (in milliseconds) and the next. Default: 100
-     */
-    delayBetweenSequence?: number;
-    /**
-     * The number of characters to delete before typing (backspacing).
-     */
-    deleteCount?: number;
-    /**
-     * The speed at which characters are deleted (backspace speed, in milliseconds). Default: 100
-     */
-    deletionSpeed?: number;
+  sequence: Array<
+    {
+      /**
+       * A function to execute as part of the sequence. Can be used as a callback to perform actions.
+       */
+      action?: () => void;
+      /**
+       * The text to display or type in the sequence.
+       */
+      text?: string;
+      /**
+       * The delay between the current sequence (in milliseconds) and the next. Default: 100
+       */
+      delayBetweenSequence?: number;
+      /**
+       * The number of characters to delete before typing (backspacing).
+       */
+      deleteCount?: number;
+      /**
+       * The speed at which characters are deleted (backspace speed, in milliseconds). Default: 100
+       */
+      deletionSpeed?: number;
 
-    /**
-     * The speed at which characters are typed (typing speed, in milliseconds). Default: 100
-     */
-    typeSpeed?: number;
-  }>;
+      /**
+       * The speed at which characters are typed (typing speed, in milliseconds). Default: 100
+       */
+      typeSpeed?: number;
+    } & (
+      | {
+          text: string; // Ensure 'text' is required
+          action?: never; // 'action' cannot be provided
+        }
+      | {
+          action: () => void; // Ensure 'action' is required
+          text?: never; // 'text' cannot be provided
+        }
+      | {
+          text: string; // Both can be provided
+          action: () => void; // Both can be provided
+        }
+    )
+  >;
   /**
    * The delay between sequences (in milliseconds) when not specified in the sequence. Default: 100
    */
@@ -174,7 +189,7 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
           resolve();
         } else {
           setText(
-            (currtext) => `${currtext.substring(0, currentText.length - 1)}`
+            (currtext) => `${currtext.substring(0, currtext.length - 1)}`
           );
         }
         i++;
@@ -202,13 +217,13 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
           currentText.substring(0, currentText.length - del) +
           data?.text?.substring(count, data?.text?.length);
         await typeLetters(
-          data?.text?.substring(count, data?.text?.length) ?? '',
+          data?.text?.substring(count, data?.text?.length),
           data?.typeSpeed
         );
         await delay(data?.delayBetweenSequence ?? delayBetweenSequence);
       } else {
-        currentText = data?.text ?? '';
-        await typeLetters(data?.text ?? '', data?.typeSpeed);
+        currentText = data?.text;
+        await typeLetters(data?.text, data?.typeSpeed);
         await delay(data?.delayBetweenSequence ?? delayBetweenSequence);
       }
     }
@@ -226,10 +241,16 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
     }
   }, []);
 
+  const cursorComponent = useMemo(() => {
+    return cursor ? (
+      <Cursor blinkSpeed={blinkSpeed} style={style} cursorStyle={cursorStyle} />
+    ) : null;
+  }, [cursor, blinkSpeed, style, cursorStyle]);
+
   return (
     <Text style={{ ...style }}>
       {text}
-      {cursor && <Cursor {...{ blinkSpeed, style, cursorStyle }} />}
+      {cursorComponent}
     </Text>
   );
 };

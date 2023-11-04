@@ -28,7 +28,6 @@ export const repeatFunctionNTimes = (func: () => void, times: number) => {
 export const countMatchingCharacters = (text1: string, text2: string) => {
   let count = 0;
   const minLength = Math.min(text1.length, text2.length);
-
   for (let i = 0; i < minLength; i++) {
     if (text1[i] === text2[i]) {
       count++;

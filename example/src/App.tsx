@@ -11,7 +11,11 @@ export default function App() {
           {
             text: 'One Two',
           },
-
+          {
+            action: () => {
+              console.log('Finished first two sequences');
+            },
+          },
           { text: 'One Two Three' },
           {
             text: 'One Two',
