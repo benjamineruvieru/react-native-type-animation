@@ -28,7 +28,7 @@ npm install react-native-type-animation
 Or, if you prefer yarn:
 
 ```sh
-yarn add react-native-typewriter-animation
+yarn add react-native-type-animation
 ```
 
 ## Documentation
