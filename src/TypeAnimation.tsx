@@ -153,7 +153,7 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
           clearInterval(interval);
           resolve();
         } else {
-          setText((currentText) => `${currentText}${textArray[i]}`);
+          setText((currText) => `${currText}${textArray[i]}`);
         }
         i++;
       }, speed);
@@ -174,8 +174,7 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
           resolve();
         } else {
           setText(
-            (currentText) =>
-              `${currentText.substring(0, currentText.length - 1)}`
+            (currtext) => `${currtext.substring(0, currentText.length - 1)}`
           );
         }
         i++;
