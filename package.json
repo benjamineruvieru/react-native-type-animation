@@ -40,12 +40,12 @@
     "android"
   ],
   "repository": "https://www.github.com/benjamineruvieru/react-native-type-animation",
-  "author": "Benjamin Eruvieru <benjamineruvieru@gmail.com> (https://www.benjamineruvieru.com)",
+  "author": "Benjamin Eruvieru <inbox@benjamineruvieru.com> (https://www.benjamineruvieru.com)",
   "license": "MIT",
   "bugs": {
     "url": "https://www.github.com/benjamineruvieru/react-native-type-animation/issues"
   },
-  "homepage": "https://www.github.com/benjamineruvieru/react-native-type-animation#readme",
+  "homepage": "https://docs.benjamineruvieru/react-native-type-animation",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
