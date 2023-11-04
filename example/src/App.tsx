@@ -1,18 +1,30 @@
 import * as React from 'react';
-
-import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'react-native-type-animation';
+import { StyleSheet, View } from 'react-native';
+import { TypeAnimation } from 'react-native-type-animation';
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
-
-  React.useEffect(() => {
-    multiply(3, 7).then(setResult);
-  }, []);
-
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <TypeAnimation
+        sequence={[
+          { text: 'One' },
+          {
+            text: 'One Two',
+          },
+          {
+            action: () => {
+              console.log('Finished first two sequences');
+            },
+          },
+          { text: 'One Two Three' },
+          {
+            text: 'One Two',
+          },
+          { text: 'One' },
+        ]}
+        loop
+        style={styles.text}
+      />
     </View>
   );
 }
@@ -22,10 +34,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'red',
   },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
+  text: {
+    color: 'white',
+    backgroundColor: 'green',
+    fontSize: 30,
   },
 });

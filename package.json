@@ -1,7 +1,7 @@
 {
   "name": "react-native-type-animation",
-  "version": "0.1.0",
-  "description": "This React Native packagedes a simple and easy way to add animated text typing effects to your apps.",
+  "version": "0.0.1",
+  "description": "React Native Type Animation is a component library that allows you to create engaging typewriter-style text animations in your React Native applications.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "types": "lib/typescript/src/index.d.ts",
@@ -40,7 +40,7 @@
     "android"
   ],
   "repository": "https://www.github.com/benjamineruvieru/react-native-type-animation",
-  "author": "Benjamin <benajamineruvieru@gmail.com> (https://www.benjamineruvieru.com)",
+  "author": "Benjamin Eruvieru <benjamineruvieru@gmail.com> (https://www.benjamineruvieru.com)",
   "license": "MIT",
   "bugs": {
     "url": "https://www.github.com/benjamineruvieru/react-native-type-animation/issues"
