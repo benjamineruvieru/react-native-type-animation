@@ -135,6 +135,10 @@ type TypeAnimationProps = {
    * Whether to display the cursor. Default: true
    */
   cursor?: boolean;
+  /**
+   * Specifies the direction in which to perform the typing/deleting animation. It accepts two possible values: 'front' and 'back'. Default: front
+   */
+  direction?: 'front' | 'back';
 };
 
 /**
@@ -150,6 +154,7 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
   style,
   cursorStyle,
   cursor = true,
+  direction = 'front',
 }) => {
   const [text, setText] = useState<string>('');
   let currentText = '';
@@ -168,7 +173,13 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
           clearInterval(interval);
           resolve();
         } else {
-          setText((currText) => `${currText}${textArray[i]}`);
+          if (direction === 'front') {
+            setText((currText) => `${currText}${textArray[i]}`);
+          } else {
+            setText(
+              (currText) => `${textArray[textArray.length - i - 1]}${currText}`
+            );
+          }
         }
         i++;
       }, speed);
@@ -188,9 +199,13 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
           clearInterval(interval);
           resolve();
         } else {
-          setText(
-            (currtext) => `${currtext.substring(0, currtext.length - 1)}`
-          );
+          if (direction === 'front') {
+            setText(
+              (currtext) => `${currtext.substring(0, currtext.length - 1)}`
+            );
+          } else {
+            setText((currtext) => `${currtext.substring(1, currtext.length)}`);
+          }
         }
         i++;
       }, speed);
@@ -208,16 +223,29 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
           await delay(data?.delayBetweenSequence ?? delayBetweenSequence);
         }
       } else if (currentText) {
-        const count = countMatchingCharacters(currentText, data?.text ?? '');
+        const count = countMatchingCharacters(
+          currentText,
+          data?.text ?? '',
+          direction
+        );
+
         const del = data?.deleteCount ?? currentText.length - count;
 
         await deleteLetters(del, data?.deletionSpeed);
+        if (direction === 'front') {
+          currentText =
+            currentText.substring(0, currentText.length - del) +
+            data?.text?.substring(count, data?.text?.length);
+        } else {
+          currentText =
+            data?.text?.substring(0, data?.text?.length - count) +
+            currentText.substring(del, currentText.length);
+        }
 
-        currentText =
-          currentText.substring(0, currentText.length - del) +
-          data?.text?.substring(count, data?.text?.length);
         await typeLetters(
-          data?.text?.substring(count, data?.text?.length),
+          direction === 'front'
+            ? data?.text?.substring(count, data?.text?.length)
+            : data?.text?.substring(0, data?.text?.length - count),
           data?.typeSpeed
         );
         await delay(data?.delayBetweenSequence ?? delayBetweenSequence);
@@ -249,8 +277,9 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
 
   return (
     <Text style={{ ...style }}>
+      {direction === 'back' && cursorComponent}
       {text}
-      {cursorComponent}
+      {direction === 'front' && cursorComponent}
     </Text>
   );
 };

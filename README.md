@@ -72,17 +72,21 @@ export default MyComponent;
 
 The following props allows you to configure the properties for the type animation component. It allows you to define an animation sequence, control the speed and behavior of the animation, and customize the appearance of the cursor.
 
-| Prop                   | Required | Type      | Default | Description                                                               |
-| ---------------------- | -------- | --------- | ------- | ------------------------------------------------------------------------- |
-| `sequence`             | yes      | Array     |         | An array of objects defining the text to be typed and animation options.  |
-| `delayBetweenSequence` | no       | Number    | 100     | Delay between animation sequences (in milliseconds).                      |
-| `splitter`             | no       | Function  |         | A function to split text into individual characters or chunks for typing. |
-| `repeat`               | no       | Number    | 1       | The number of times to repeat the sequence.                               |
-| `loop`                 | no       | Boolean   | false   | Whether to loop the typing animation indefinitely.                        |
-| `blinkSpeed`           | no       | Number    | 500     | The speed at which the cursor blinks (in milliseconds).                   |
-| `style`                | no       | TextStyle |         | Additional styles for the typewriter animation container.                 |
-| `cursorStyle`          | no       | TextStyle |         | Additional styles for the cursor.                                         |
-| `cursor`               | no       | Boolean   | true    | Whether to display the cursor.                                            |
+| Prop                   | Required | Type      | Default | Description                                                                                                                    |
+| ---------------------- | -------- | --------- | ------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `blinkSpeed`           | no       | Number    | 500     | The speed at which the cursor blinks (in milliseconds).                                                                        |
+| `cursor`               | no       | Boolean   | true    | Whether to display the cursor.                                                                                                 |
+| `cursorStyle`          | no       | TextStyle |         | Additional styles for the cursor.                                                                                              |
+| `delayBetweenSequence` | no       | Number    | 100     | Delay between animation sequences (in milliseconds).                                                                           |
+| `direction`            | no       | String    | front   | Specifies the direction in which to perform the typing/deleting animation. It accepts two possible values: 'front' and 'back'. |
+| `loop`                 | no       | Boolean   | false   | Whether to loop the typing animation indefinitely.                                                                             |
+| `repeat`               | no       | Number    | 1       | The number of times to repeat the sequence.                                                                                    |
+| `sequence`             | yes      | Array     |         | An array of objects defining the text to be typed and animation options.                                                       |
+| `splitter`             | no       | Function  |         | A function to split text into individual characters or chunks for typing.                                                      |
+|                        |
+|                        |
+
+| `style` | no | TextStyle | | Additional styles for the typewriter animation container. |
 
 #### `sequence` Array
 
@@ -99,6 +103,10 @@ The `sequence` prop is an array of objects, where each object defines a part of 
 - `deletionSpeed`: The speed at which characters are deleted (backspace speed, in milliseconds). The default is 100, but you can specify a custom value for individual sequences.
 
 - `typeSpeed`: The speed at which characters are typed (typing speed, in milliseconds). The default is 100, but you can specify a custom value for individual sequences.
+
+#### `direction` String
+
+The `direction` prop specifies the direction in which to perform the typing/deleting animation. It accepts two possible values: 'front' and 'back'.
 
 #### `splitter` Function
 
@@ -142,6 +150,20 @@ const animationProps = {
   repeat: 2,
   blinkSpeed: 400,
   cursorStyle: { color: 'red' },
+};
+```
+
+```javascript
+const animationProps = {
+  sequence: [
+    { text: 'Hello World!', typeSpeed: 100 },
+    { text: 'Hola World!', typeSpeed: 150, delayBetweenSequence: 500 },
+  ],
+  delayBetweenSequence: 200,
+  loop: true,
+  blinkSpeed: 400,
+  cursorStyle: { color: 'red' },
+  direction: 'back',
 };
 ```
 
