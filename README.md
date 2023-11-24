@@ -79,7 +79,9 @@ The following props allows you to configure the properties for the type animatio
 | `cursorStyle`          | no       | TextStyle |         | Additional styles for the cursor.                                                                                              |
 | `delayBetweenSequence` | no       | Number    | 100     | Delay between animation sequences (in milliseconds).                                                                           |
 | `direction`            | no       | String    | front   | Specifies the direction in which to perform the typing/deleting animation. It accepts two possible values: 'front' and 'back'. |
+| `initialDelay`         | no       | Number    | 0       | The delay before the animation begins (in milliseconds).                                                                       |
 | `loop`                 | no       | Boolean   | false   | Whether to loop the typing animation indefinitely.                                                                             |
+| `preRenderText`        | no       | String    | None    | Specifies the initial text to display.                                                                                         |
 | `repeat`               | no       | Number    | 1       | The number of times to repeat the sequence.                                                                                    |
 | `sequence`             | yes      | Array     |         | An array of objects defining the text to be typed and animation options.                                                       |
 | `splitter`             | no       | Function  |         | A function to split text into individual characters or chunks for typing.                                                      |

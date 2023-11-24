@@ -142,9 +142,9 @@ type TypeAnimationProps = {
   /**
    * Specifies the initial text to display.
    */
-  preRender?: string;
+  preRenderText?: string;
   /**
-   * The delay before the animation begin (in milliseconds). Default: 0
+   * The delay before the animation begins (in milliseconds). Default: 0
    */
   initialDelay?: number;
 };
@@ -163,11 +163,11 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
   cursorStyle,
   cursor = true,
   direction = 'front',
-  preRender = '',
+  preRenderText = '',
   initialDelay = 0,
 }) => {
-  const [text, setText] = useState<string>(preRender);
-  let currentText = preRender;
+  const [text, setText] = useState<string>(preRenderText);
+  let currentText = preRenderText;
 
   /**
    * Type a sequence of letters with a specified speed.
