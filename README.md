@@ -85,10 +85,7 @@ The following props allows you to configure the properties for the type animatio
 | `repeat`               | no       | Number    | 1       | The number of times to repeat the sequence.                                                                                    |
 | `sequence`             | yes      | Array     |         | An array of objects defining the text to be typed and animation options.                                                       |
 | `splitter`             | no       | Function  |         | A function to split text into individual characters or chunks for typing.                                                      |
-|                        |
-|                        |
-
-| `style` | no | TextStyle | | Additional styles for the typewriter animation container. |
+| `style`                | no       | TextStyle |         | Additional styles for the typewriter animation container.                                                                      |
 
 #### `sequence` Array
 
