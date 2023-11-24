@@ -139,6 +139,14 @@ type TypeAnimationProps = {
    * Specifies the direction in which to perform the typing/deleting animation. It accepts two possible values: 'front' and 'back'. Default: front
    */
   direction?: 'front' | 'back';
+  /**
+   * Specifies the initial text to display.
+   */
+  preRender?: string;
+  /**
+   * The delay before the animation begin (in milliseconds). Default: 0
+   */
+  initialDelay?: number;
 };
 
 /**
@@ -155,9 +163,11 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
   cursorStyle,
   cursor = true,
   direction = 'front',
+  preRender = '',
+  initialDelay = 0,
 }) => {
-  const [text, setText] = useState<string>('');
-  let currentText = '';
+  const [text, setText] = useState<string>(preRender);
+  let currentText = preRender;
 
   /**
    * Type a sequence of letters with a specified speed.
@@ -257,7 +267,7 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
     }
   };
 
-  useEffect(() => {
+  const firstFunction = () => {
     if (loop) {
       const run = async () => {
         await runSequence();
@@ -266,6 +276,15 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
       run();
     } else {
       repeatFunctionNTimes(runSequence, repeat);
+    }
+  };
+  useEffect(() => {
+    if (initialDelay) {
+      setTimeout(() => {
+        firstFunction();
+      }, initialDelay);
+    } else {
+      firstFunction();
     }
   }, []);
 
