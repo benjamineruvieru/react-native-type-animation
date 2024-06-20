@@ -1,4 +1,10 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import type { TextStyle } from 'react-native';
 import { Animated, Text } from 'react-native';
 import {
@@ -45,7 +51,7 @@ const Cursor: React.FC<CursorProps> = ({
         Animated.delay(blinkSpeed),
       ])
     ).start();
-  }, []);
+  }, [blinkSpeed, opacity]);
 
   return (
     <Animated.Text style={{ opacity, ...style, ...cursorStyle }}>
@@ -80,12 +86,12 @@ type TypeAnimationProps = {
        */
       deleteCount?: number;
       /**
-       * The speed at which characters are deleted (backspace speed, in milliseconds). Default: 100
+       * The speed at which characters are deleted from this sequence (backspace speed, in milliseconds). Default: 100
        */
       deletionSpeed?: number;
 
       /**
-       * The speed at which characters are typed (typing speed, in milliseconds). Default: 100
+       * The speed at which characters are typed in this sequence (typing speed, in milliseconds). Default: 100
        */
       typeSpeed?: number;
     } & (
@@ -147,6 +153,23 @@ type TypeAnimationProps = {
    * The delay before the animation begins (in milliseconds). Default: 0
    */
   initialDelay?: number;
+  /**
+   * Callback function triggered when a character is typed.
+   */
+  onCharTyped?: (data: { character: string; currentText: string }) => void;
+  /**
+   * Callback function triggered when a character is deleted.
+   */
+  onCharDeleted?: (data: { character: string; currentText: string }) => void;
+  /**
+   * The speed at which characters are deleted (backspace speed, in milliseconds). Default: 100
+   */
+  deletionSpeed?: number;
+
+  /**
+   * The speed at which characters are typed (typing speed, in milliseconds). Default: 100
+   */
+  typeSpeed?: number;
 };
 
 /**
@@ -165,6 +188,10 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
   direction = 'front',
   preRenderText = '',
   initialDelay = 0,
+  onCharTyped,
+  onCharDeleted,
+  typeSpeed = 100,
+  deletionSpeed = 100,
 }) => {
   const [text, setText] = useState<string>(preRenderText);
   let currentText = preRenderText;
@@ -174,7 +201,7 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
    * @param textToType - The text to type.
    * @param speed - The typing speed.
    */
-  const typeLetters = (textToType: string, speed = 100) => {
+  const typeLetters = (textToType: string, speed = typeSpeed) => {
     return new Promise<void>((resolve) => {
       let i = 0;
       const textArray = splitter(textToType);
@@ -184,11 +211,35 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
           resolve();
         } else {
           if (direction === 'front') {
-            setText((currText) => `${currText}${textArray[i]}`);
+            setText((currText) => {
+              const character = textArray[i];
+              const word = `${currText}${character}`;
+              if (character) {
+                const data = {
+                  character,
+                  currentText: word,
+                };
+                if (onCharTyped) {
+                  onCharTyped(data);
+                }
+              }
+              return word;
+            });
           } else {
-            setText(
-              (currText) => `${textArray[textArray.length - i - 1]}${currText}`
-            );
+            setText((currText) => {
+              const character = textArray[textArray.length - i - 1];
+              const word = `${character}${currText}`;
+              if (character) {
+                const data = {
+                  character,
+                  currentText: word,
+                };
+                if (onCharTyped) {
+                  onCharTyped(data);
+                }
+              }
+              return word;
+            });
           }
         }
         i++;
@@ -201,7 +252,7 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
    * @param count - The number of letters to delete.
    * @param speed - The deletion speed.
    */
-  const deleteLetters = (count: number, speed = 100) => {
+  const deleteLetters = (count: number, speed = deletionSpeed) => {
     return new Promise<void>((resolve) => {
       let i = 0;
       const interval = setInterval(() => {
@@ -210,11 +261,35 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
           resolve();
         } else {
           if (direction === 'front') {
-            setText(
-              (currtext) => `${currtext.substring(0, currtext.length - 1)}`
-            );
+            setText((currtext) => {
+              const word = `${currtext.substring(0, currtext.length - 1)}`;
+              const character = currtext[currtext.length - 1];
+              if (character) {
+                const data = {
+                  character,
+                  currentText: word,
+                };
+                if (onCharDeleted) {
+                  onCharDeleted(data);
+                }
+              }
+              return word;
+            });
           } else {
-            setText((currtext) => `${currtext.substring(1, currtext.length)}`);
+            setText((currtext) => {
+              const word = `${currtext.substring(1, currtext.length)}`;
+              const character = currtext[0];
+              if (character) {
+                const data = {
+                  character,
+                  currentText: word,
+                };
+                if (onCharDeleted) {
+                  onCharDeleted(data);
+                }
+              }
+              return word;
+            });
           }
         }
         i++;
@@ -267,7 +342,7 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
     }
   };
 
-  const firstFunction = () => {
+  const firstFunction = useCallback(() => {
     if (loop) {
       const run = async () => {
         await runSequence();
@@ -277,7 +352,9 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
     } else {
       repeatFunctionNTimes(runSequence, repeat);
     }
-  };
+    /* eslint-disable react-hooks/exhaustive-deps */
+  }, []);
+
   useEffect(() => {
     if (initialDelay) {
       setTimeout(() => {
@@ -286,7 +363,7 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
     } else {
       firstFunction();
     }
-  }, []);
+  }, [initialDelay, firstFunction]);
 
   const cursorComponent = useMemo(() => {
     return cursor ? (

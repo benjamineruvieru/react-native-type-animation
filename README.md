@@ -81,11 +81,15 @@ The following props allows you to configure the properties for the type animatio
 | `direction`            | no       | String    | front   | Specifies the direction in which to perform the typing/deleting animation. It accepts two possible values: 'front' and 'back'. |
 | `initialDelay`         | no       | Number    | 0       | The delay before the animation begins (in milliseconds).                                                                       |
 | `loop`                 | no       | Boolean   | false   | Whether to loop the typing animation indefinitely.                                                                             |
+| `onCharTyped`          | no       | Function  |         | Callback function triggered when a character is typed.                                                                         |
+| `onCharDeleted`        | no       | Function  |         | Callback function triggered when a character is deleted.                                                                       |
 | `preRenderText`        | no       | String    | None    | Specifies the initial text to display.                                                                                         |
 | `repeat`               | no       | Number    | 1       | The number of times to repeat the sequence.                                                                                    |
 | `sequence`             | yes      | Array     |         | An array of objects defining the text to be typed and animation options.                                                       |
 | `splitter`             | no       | Function  |         | A function to split text into individual characters or chunks for typing.                                                      |
 | `style`                | no       | TextStyle |         | Additional styles for the typewriter animation container.                                                                      |
+| `typeSpeed`            | no       | Number    | 100     | The speed at which characters are typed.                                                                                       |
+| `deletionSpeed`        | no       | Number    | 100     | The speed at which characters are deleted.                                                                                     |
 
 #### `sequence` Array
 
@@ -99,9 +103,9 @@ The `sequence` prop is an array of objects, where each object defines a part of 
 
 - `deleteCount`: The number of characters to delete before typing (backspacing).
 
-- `deletionSpeed`: The speed at which characters are deleted (backspace speed, in milliseconds). The default is 100, but you can specify a custom value for individual sequences.
+- `deletionSpeed`: The speed at which characters are deleted from this sequence (backspace speed, in milliseconds). The default is 100, but you can specify a custom value for individual sequences.
 
-- `typeSpeed`: The speed at which characters are typed (typing speed, in milliseconds). The default is 100, but you can specify a custom value for individual sequences.
+- `typeSpeed`: The speed at which characters are typed in this sequence(typing speed, in milliseconds). The default is 100, but you can specify a custom value for individual sequences.
 
 #### `direction` String
 
@@ -134,6 +138,20 @@ The `cursorStyle` prop is used to apply additional styles to the cursor element.
 #### `cursor` Boolean
 
 The `cursor` prop determines whether the cursor is displayed during the animation. By default, it is set to `true`, but you can set it to `false` if you don't want to display the cursor.
+
+#### `onCharTyped` Callback
+
+This callback function is triggered each time a character is typed. It receives an object as an argument containing two properties:
+
+- character: The character that was just typed.
+- currentText: The current state of the text after the character has been typed.
+
+#### `onCharDeleted` Callback
+
+This callback function is triggered each time a character is deleted. It receives an object as an argument containing two properties:
+
+- character: The character that was just deleted.
+- currentText: The current state of the text after the character has been deleted.
 
 **Note:** When using the `sequence` prop, you can define complex typing animations with different text, delays, and actions. Each object in the `sequence` array represents a step in the animation.
 

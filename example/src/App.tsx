@@ -22,8 +22,41 @@ export default function App() {
           },
           { text: 'One' },
         ]}
+        onCharDeleted={({ character, currentText }) => {
+          console.log('char deleted', { character, currentText });
+        }}
+        onCharTyped={({ character, currentText }) => {
+          console.log('char typed', { character, currentText });
+        }}
         loop
         style={styles.text}
+      />
+      <TypeAnimation
+        sequence={[
+          { text: 'One' },
+          {
+            text: 'One Two',
+          },
+          {
+            action: () => {
+              console.log('Finished first two sequences');
+            },
+          },
+          { text: 'One Two Three' },
+          {
+            text: 'One Two',
+          },
+          { text: 'One' },
+        ]}
+        loop
+        direction="back"
+        style={styles.text}
+        onCharDeleted={({ character, currentText }) => {
+          console.log('char deleted', { character, currentText });
+        }}
+        onCharTyped={({ character, currentText }) => {
+          console.log('char typed', { character, currentText });
+        }}
       />
     </View>
   );
