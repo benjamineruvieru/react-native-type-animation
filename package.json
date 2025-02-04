@@ -45,7 +45,7 @@
   "bugs": {
     "url": "https://www.github.com/benjamineruvieru/react-native-type-animation/issues"
   },
-  "homepage": "https://docs.benjamineruvieru.com/react-native-type-animation",
+  "homepage": "https://docs.benjamineruvieru.com/docs/react-native-type-animation",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
