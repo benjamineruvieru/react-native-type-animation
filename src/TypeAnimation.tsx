@@ -298,7 +298,6 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
    * Run the typing and deletion sequence based on the provided data.
    */
   const runSequence = async () => {
-    console.log('sequence', sequence);
     for (const data of sequence) {
       if (data?.action) {
         data.action();
