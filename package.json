@@ -1,6 +1,6 @@
 {
   "name": "react-native-type-animation",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "React Native Type Animation is a component library that allows you to create engaging typewriter-style text animations in your React Native applications.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
