@@ -33,7 +33,7 @@ yarn add react-native-type-animation
 
 ## Documentation
 
-The docs can be found here: [https://docs.benjamineruvieru.com/react-native-type-animation](https://docs.benjamineruvieru.com/react-native-type-animation)
+The docs can be found here: [https://docs.benjamineruvieru.com/docs/react-native-type-animation/](https://docs.benjamineruvieru.com/docs/react-native-type-animation/)
 
 ## Usage
 
