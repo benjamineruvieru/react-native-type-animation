@@ -6,7 +6,7 @@ import React, {
   useState,
 } from 'react';
 import type { TextStyle } from 'react-native';
-import { Animated, Text } from 'react-native';
+import { Animated, InteractionManager, Text } from 'react-native';
 import {
   countMatchingCharacters,
   delay,
@@ -202,48 +202,45 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
    * @param speed - The typing speed.
    */
   const typeLetters = (textToType: string, speed = typeSpeed) => {
-    return new Promise<void>((resolve) => {
-      let i = 0;
-      const textArray = splitter(textToType);
-      const interval = setInterval(() => {
-        if (i >= textArray.length) {
-          clearInterval(interval);
-          resolve();
+    const isFront = direction === 'front';
+    const textArray = splitter(textToType);
+    if (!isFront) {
+      textArray.reverse();
+    }
+    return new Promise<void>(async (resolve) => {
+      for (const character of textArray) {
+        if (isFront) {
+          setText((currText) => {
+            const word = `${currText}${character}`;
+            if (character) {
+              const data = {
+                character,
+                currentText: word,
+              };
+              if (onCharTyped) {
+                onCharTyped(data);
+              }
+            }
+            return word;
+          });
         } else {
-          if (direction === 'front') {
-            setText((currText) => {
-              const character = textArray[i];
-              const word = `${currText}${character}`;
-              if (character) {
-                const data = {
-                  character,
-                  currentText: word,
-                };
-                if (onCharTyped) {
-                  onCharTyped(data);
-                }
+          setText((currText) => {
+            const word = `${character}${currText}`;
+            if (character) {
+              const data = {
+                character,
+                currentText: word,
+              };
+              if (onCharTyped) {
+                onCharTyped(data);
               }
-              return word;
-            });
-          } else {
-            setText((currText) => {
-              const character = textArray[textArray.length - i - 1];
-              const word = `${character}${currText}`;
-              if (character) {
-                const data = {
-                  character,
-                  currentText: word,
-                };
-                if (onCharTyped) {
-                  onCharTyped(data);
-                }
-              }
-              return word;
-            });
-          }
+            }
+            return word;
+          });
         }
-        i++;
-      }, speed);
+        await delay(speed);
+      }
+      resolve();
     });
   };
 
@@ -301,6 +298,7 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
    * Run the typing and deletion sequence based on the provided data.
    */
   const runSequence = async () => {
+    console.log('sequence', sequence);
     for (const data of sequence) {
       if (data?.action) {
         data.action();
@@ -313,7 +311,7 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
           data?.text ?? '',
           direction
         );
-
+        // console.log('count', count, currentText);
         const del = data?.deleteCount ?? currentText.length - count;
 
         await deleteLetters(del, data?.deletionSpeed);
@@ -356,6 +354,7 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
   }, []);
 
   useEffect(() => {
+    const handle = InteractionManager.createInteractionHandle();
     if (initialDelay) {
       setTimeout(() => {
         firstFunction();
@@ -363,7 +362,9 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
     } else {
       firstFunction();
     }
-  }, [initialDelay, firstFunction]);
+
+    return () => InteractionManager.clearInteractionHandle(handle);
+  }, []);
 
   const cursorComponent = useMemo(() => {
     return cursor ? (
