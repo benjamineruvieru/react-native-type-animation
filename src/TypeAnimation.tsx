@@ -211,7 +211,7 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
       for (const character of textArray) {
         if (isFront) {
           setText((currText) => {
-            const word = `${currText}${character}`;
+            const word = `${currText}${character??''}`;
             if (character) {
               const data = {
                 character,
@@ -225,7 +225,7 @@ const TypeAnimation: React.FC<TypeAnimationProps> = ({
           });
         } else {
           setText((currText) => {
-            const word = `${character}${currText}`;
+            const word = `${character??""}${currText}`;
             if (character) {
               const data = {
                 character,
